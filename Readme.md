@@ -15,10 +15,6 @@
   - [Built With](#built-with)
 - [Installation](#installation)
   - [Documentation](#documentation)
-  - [Related Project](#related-project)
-- [Contributors](#contributors)
-  - [Meet The Team Members](#meet-the-team-members)
-
 # About The Project
 
 1. Login API
