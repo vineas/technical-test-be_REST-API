@@ -4,7 +4,7 @@ const { protect } = require('../middleware/auth')
 const jobsController = require('../controller/jobs');
 
 router
-  .get("/", jobsController.getAllJobs)
+  .get("/", protect, jobsController.getAllJobs)
   .get("/search", protect, jobsController.getSearchJobs)
   .get("/:id", jobsController.getDetailJobs)
   .post("/", jobsController.jobsCreate)
