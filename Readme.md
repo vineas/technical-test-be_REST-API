@@ -21,11 +21,29 @@
 
 # About The Project
 
-Blanja is an E-commerce website project that aims to provide an easy and convenient online shopping experience for users in Indonesia. The site offers a wide range of products, including fashion, beauty, electronics, and food and beverages.
+1. Login API
+    - API harus memvalidasi nama pengguna dan kata sandi
+    - Daftar nama pengguna dan kata sandi yang valid harus disimpan di DBMS
+      DBMS apa pun diperbolehkan
+    - API harus mengimplementasikan JSON Web Token (JWT)
 
-To use Blanja's services, users only need to create an account and enter their payment details. After that, users can browse products, add them to their shopping cart, and choose their preferred payment method.
+2. Get job list API
+    - API harus diamankan dengan authorization JWT
+    - API harus mengembalikan data list pekerjaan sebagai muatan respons dari data yang disimpan di DBMS. Beris id, istilah pekerjaan, lokasi, penuh waktu atau paruh waktu, description pekerjaan.
+    - API harus mendukung pagination
+    - API harus menyediakan fungsi “pencarian” untuk mencari pekerjaan berdasarkan istilah, lokasi, penuh waktu vs paruh waktu, atau kombinasi ketiganya. Semua parameter adalah opsional.
 
-With all the features and security provided, Blanja is expected to provide a safe, easy, and convenient online shopping experience for users across Indonesia.
+3. Get job detail API
+    - API harus diamankan dengan authorization JWT
+    - API harus mengembalikan data detail pekerjaan sebagai respons dari data yang disimpan di DBMS. Berisi id, istilah pekerjaan, lokasi, penuh
+      waktu atau paruh waktu, description pekerjaan.
+    - Detail pekerjaan tersebut berdasarkan job id yang dikirim melalui param path
+
+4. Insert dan update job API
+    - API harus diamankan dengan authorization JWT
+    - API harus menyediakan insert job baru yang berisikan data  id, istilah pekerjaan, lokasi, penuh waktu atau paruh waktu, description pekerjaan
+    - API harus menyediakan update job untuk data  istilah pekerjaan, lokasi, penuh waktu atau paruh waktu, description pekerjaan berdasarkan job id.
+
 
 ## Built With
 
