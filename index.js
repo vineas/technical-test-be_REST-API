@@ -6,7 +6,7 @@ const app = express();
 const createError = require('http-errors')
 // const helmet = require('helmet');
 var xss = require('xss-clean')
-const mainRouter = require('../REST_API/routes/index')
+const mainRouter = require('./routes/index')
 const port = 3434;
 
 app.use(express.json());
@@ -15,7 +15,6 @@ app.use(express.json());
 // app.use(helmet());
 app.use(xss())
 app.use('/', mainRouter);
-// app.use('/img', express.static('upload'))
 app.all('*', (req, res, next) => {
   next(new createError.NotFound())
 })
