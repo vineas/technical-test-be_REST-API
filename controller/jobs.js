@@ -1,11 +1,21 @@
 const bcrypt = require("bcryptjs");
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
-const { selectAllJobs, searchJobs, createJobs, selectJobs, updateJobs, countData } = require("../model/jobs");
+const { selectAllJobs, searchJobs, createJobs, selectJobs, updateJobs, countData, findUUID } = require("../model/jobs");
 const commonHelper = require("../helper/common");
 const authHelper = require("../helper/auth");
 
 let jobsController = {
+
+    getSearchJobs: async (req, res) => {
+        try {
+          const searchTerm  = req.query.keyword;
+          const result = await searchJobs(searchTerm );
+          commonHelper.response(res, result.rows, 200, "get data success");
+        } catch (error) {
+          console.log(error);
+        }
+      },
 
     getAllJobs: async (req, res) => {
         try {
@@ -33,17 +43,6 @@ let jobsController = {
                 "get data success",
                 pagination
             );
-        } catch (error) {
-            console.log(error);
-        }
-    },
-
-
-    getSearchJobs: async (req, res) => {
-        try {
-            const keyword = req.query.keyword; // Update this line
-            const result = await searchJobs(keyword);
-            commonHelper.response(res, result.rows, 200, "get data success");
         } catch (error) {
             console.log(error);
         }
@@ -106,7 +105,6 @@ let jobsController = {
             console.log(error);
         }
     },
-
 
     RefreshToken: (req, res) => {
         const refreshToken = req.body.RefreshToken

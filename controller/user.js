@@ -1,7 +1,8 @@
 const bcrypt = require("bcryptjs");
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
-const { selectAllUsers, findEmail, createUsers } = require("../model/user");
+const Joi = require("joi");
+const { selectAllUsers, findEmail, createUsers, searchUser } = require("../model/user");
 const commonHelper = require("../helper/common");
 const authHelper = require("../helper/auth");
 
@@ -16,6 +17,16 @@ let userController = {
     }
   },
 
+  getSearchUser: async (req, res) => {
+    try {
+      const searchBy = req.query.keyword;
+      const result = await searchUser(searchBy);
+      commonHelper.response(res, result.rows, 200, "get data success");
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
   registerUser: async (req, res) => {
     let { users_fullname, users_email, users_password } = req.body;
     const { rowCount } = await findEmail(users_email);
@@ -24,6 +35,26 @@ let userController = {
     }
     const users_passwordHash = bcrypt.hashSync(users_password);
     const users_id = uuidv4();
+
+    const schema = Joi.object().keys({
+      users_fullname: Joi.string().required(),
+      users_email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required().messages({
+        'string.email': 'Email must be valid and contain the character "@"',
+        'any.required': 'Email must be filled in'
+      }),
+      users_password: Joi.string().min(3).max(15).required(),
+    });
+
+    const { error, value } = schema.validate(req.body, {
+      abortEarly: false,
+    });
+
+    if (error) {
+      console.log(error); 
+      return res.send(error.details);
+    }
+
+
     const data = {
       users_id,
       users_fullname,
@@ -52,14 +83,15 @@ let userController = {
     if (!isValidPassword) {
       return res.json({ message: "Password is incorrect" });
     }
-    delete users.users_password;
+    delete users.users_password; // Menghapus users_password dari objek users
     const payload = {
       users_email: users.users_email
     };
     users.token = authHelper.generateToken(payload);
-    users.refreshToken = authHelper.refreshToken(payload)
+    users.refreshToken = authHelper.refreshToken(payload);
     commonHelper.response(res, users, 201, "login is successful");
-  },
+},
+
   profile: async (req, res) => {
     const email = req.payload.email;
     const {
@@ -72,16 +104,16 @@ let userController = {
   RefreshToken: (req, res) => {
     const refreshToken = req.body.RefreshToken
     const decoded = jwt.verify(refreshToken, process.env.SECRETE_KEY_JWT)
-    const payload ={
-      users_email : decoded.users_email,
+    const payload = {
+      users_email: decoded.users_email,
     }
-    const result ={
-      token : authHelper.generateToken(payload),
-      refreshToken : authHelper.refreshToken(payload)
+    const result = {
+      token: authHelper.generateToken(payload),
+      refreshToken: authHelper.refreshToken(payload)
     }
     commonHelper.response(res, result, 200, "Token is Already generate");
 
-  
+
   }
 };
 

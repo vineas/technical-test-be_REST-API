@@ -4,6 +4,11 @@ const selectAllUsers = () => {
   return Pool.query(`SELECT * FROM users `)
 }
 
+const searchUser = (users_fullname) => {
+  return Pool.query(`SELECT * FROM users WHERE users_fullname ILIKE '%${users_fullname}%'`)
+}
+
+
 
 const createUsers = (data) => {
   const { users_id, users_email, users_passwordHash, users_fullname } = data;
@@ -34,6 +39,7 @@ const findEmail = (users_email) =>{
 }
 module.exports = {
   selectAllUsers,
+  searchUser,
   createUsers,
   findEmail
 };

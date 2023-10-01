@@ -7,5 +7,6 @@ router
   .get("/", protect, userController.getAllUser)
   .post("/register", userController.registerUser)
   .post("/login", userController.loginUser)
+  .get("/search", userController.getSearchUser)
 
 module.exports = router;
